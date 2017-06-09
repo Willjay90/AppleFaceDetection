@@ -114,6 +114,21 @@ class ViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        if let videoPreviewLayerConnection = previewView.videoPreviewLayer.connection {
+            let deviceOrientation = UIDevice.current.orientation
+            guard let newVideoOrientation = deviceOrientation.videoOrientation, deviceOrientation.isPortrait || deviceOrientation.isLandscape else {
+                return
+            }
+            
+            videoPreviewLayerConnection.videoOrientation = newVideoOrientation
+            
+        }
+    }
+    
     @IBOutlet weak var previewView: PreviewView!
     
     // MARK: Session Management
@@ -209,8 +224,8 @@ class ViewController: UIViewController {
         
         // add output
         videoDataOutput = AVCaptureVideoDataOutput()
-//        let rgbOutputSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA as Any]
-        videoDataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String): NSNumber(value: kCVPixelFormatType_32BGRA)]
+        videoDataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32BGRA)]
+        
         
         if session.canAddOutput(videoDataOutput) {
             videoDataOutput.alwaysDiscardsLateVideoFrames = true
@@ -290,12 +305,10 @@ class ViewController: UIViewController {
 
 extension ViewController {
     private func addObservers() {
-        //        session.addObserver(self, forKeyPath: "running", options: .new, context: &sessionRunningObserveContext)
         /*
          Observe the previewView's regionOfInterest to update the AVCaptureMetadataOutput's
          rectOfInterest when the user finishes resizing the region of interest.
          */
-        //        previewView.addObserver(self, forKeyPath: "regionOfInterest", options: .new, context: &previewViewRegionOfInterestObserveContext)
         NotificationCenter.default.addObserver(self, selector: #selector(sessionRuntimeError), name: Notification.Name("AVCaptureSessionRuntimeErrorNotification"), object: session)
         
         /*
