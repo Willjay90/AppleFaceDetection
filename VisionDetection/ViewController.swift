@@ -283,17 +283,9 @@ class ViewController: UIViewController {
         case .portraitUpsideDown:
             exifOrientation = .left0ColBottom
         case .landscapeLeft:
-            if devicePosition == .front {
-                exifOrientation = .bottom0ColRight
-            } else {
-                exifOrientation = .top0ColLeft
-            }
+            exifOrientation = devicePosition == .front ? .bottom0ColRight : .top0ColLeft
         case .landscapeRight:
-            if devicePosition == .front {
-                exifOrientation = .top0ColLeft
-            } else {
-                exifOrientation = .bottom0ColRight
-            }
+            exifOrientation = devicePosition == .front ? .top0ColLeft : .bottom0ColRight
         default:
             exifOrientation = .right0ColTop
         }
@@ -407,7 +399,6 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
         }
         
         let exifOrientation = self.exifOrientationFromDeviceOrientation()
-        
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: exifOrientation, options: requestOptions)
         do {
             try imageRequestHandler.perform(self.requests)
