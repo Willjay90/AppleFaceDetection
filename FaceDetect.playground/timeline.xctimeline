@@ -3,37 +3,42 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=1&amp;CharacterRangeLoc=1317&amp;EndingColumnNumber=29&amp;EndingLineNumber=35&amp;StartingColumnNumber=28&amp;StartingLineNumber=35&amp;Timestamp=527064966.775746"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=1&amp;CharacterRangeLoc=1356&amp;EndingColumnNumber=24&amp;EndingLineNumber=35&amp;StartingColumnNumber=23&amp;StartingLineNumber=35&amp;Timestamp=529563951.699434"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=1318&amp;EndingColumnNumber=29&amp;EndingLineNumber=35&amp;StartingColumnNumber=29&amp;StartingLineNumber=35&amp;Timestamp=527064966.775877"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=1357&amp;EndingColumnNumber=24&amp;EndingLineNumber=35&amp;StartingColumnNumber=24&amp;StartingLineNumber=35&amp;Timestamp=529563951.69957"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=2&amp;CharacterRangeLoc=1612&amp;EndingColumnNumber=28&amp;EndingLineNumber=50&amp;StartingColumnNumber=26&amp;StartingLineNumber=50&amp;Timestamp=527064966.775976"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=2&amp;CharacterRangeLoc=1671&amp;EndingColumnNumber=20&amp;EndingLineNumber=51&amp;StartingColumnNumber=18&amp;StartingLineNumber=51&amp;Timestamp=529563951.69967"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=5&amp;CharacterRangeLoc=1537&amp;EndingColumnNumber=3&amp;EndingLineNumber=47&amp;StartingColumnNumber=16&amp;StartingLineNumber=46&amp;Timestamp=527064966.77607"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=5&amp;CharacterRangeLoc=1576&amp;EndingColumnNumber=16&amp;EndingLineNumber=46&amp;StartingColumnNumber=11&amp;StartingLineNumber=46&amp;Timestamp=529563951.699766"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=10&amp;CharacterRangeLoc=1584&amp;EndingColumnNumber=8&amp;EndingLineNumber=50&amp;StartingColumnNumber=12&amp;StartingLineNumber=49&amp;Timestamp=527064966.776163"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=10&amp;CharacterRangeLoc=1646&amp;EndingColumnNumber=3&amp;EndingLineNumber=51&amp;StartingColumnNumber=7&amp;StartingLineNumber=50&amp;Timestamp=529563951.69988"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=5&amp;CharacterRangeLoc=1548&amp;EndingColumnNumber=14&amp;EndingLineNumber=47&amp;StartingColumnNumber=9&amp;StartingLineNumber=47&amp;Timestamp=527064966.776258"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=5&amp;CharacterRangeLoc=1587&amp;EndingColumnNumber=9&amp;EndingLineNumber=47&amp;StartingColumnNumber=4&amp;StartingLineNumber=47&amp;Timestamp=529563951.69999"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/WeiJay/Desktop/Swift/FaceDetect.playground#CharacterRangeLen=10&amp;CharacterRangeLoc=1595&amp;EndingColumnNumber=19&amp;EndingLineNumber=50&amp;StartingColumnNumber=9&amp;StartingLineNumber=50&amp;Timestamp=527064966.776349"
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=7&amp;CharacterRangeLoc=1657&amp;EndingColumnNumber=11&amp;EndingLineNumber=51&amp;StartingColumnNumber=4&amp;StartingLineNumber=51&amp;Timestamp=529563951.700084"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/WeiJay/GitHub/AppleFaceDetection/FaceDetect.playground#CharacterRangeLen=5&amp;CharacterRangeLoc=1592&amp;EndingColumnNumber=14&amp;EndingLineNumber=47&amp;StartingColumnNumber=9&amp;StartingLineNumber=47&amp;Timestamp=529563951.700176"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>

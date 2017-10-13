@@ -266,8 +266,8 @@ class ViewController: UIViewController {
         return availableSessionPresets
     }
     
-    func exifOrientationFromDeviceOrientation() -> Int32 {
-        enum DeviceOrientation: Int32 {
+    func exifOrientationFromDeviceOrientation() -> UInt32 {
+        enum DeviceOrientation: UInt32 {
             case top0ColLeft = 1
             case top0ColRight = 2
             case bottom0ColRight = 3
@@ -391,15 +391,16 @@ extension ViewController {
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+        let exifOrientation = CGImagePropertyOrientation(rawValue: exifOrientationFromDeviceOrientation()) else { return }
         var requestOptions: [VNImageOption : Any] = [:]
         
         if let cameraIntrinsicData = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil) {
             requestOptions = [.cameraIntrinsics : cameraIntrinsicData]
         }
         
-        let exifOrientation = self.exifOrientationFromDeviceOrientation()
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: exifOrientation, options: requestOptions)
+        
         do {
             try imageRequestHandler.perform(self.requests)
         }

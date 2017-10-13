@@ -1,4 +1,4 @@
-// Swift 4, Xcode 9 beta 6 (9M214v)
+// Swift 4, Xcode 9.1 (9B46)
 
 import Vision
 import UIKit
@@ -9,7 +9,7 @@ extension UIImage {
         return CIImage(data: data)
     }
     
-    // CIDetector
+    // Face Detection with CIDetector
     var faces: [UIImage] {
         guard let ciImage = ciImage else { return [] }
         return (CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])?
@@ -20,8 +20,8 @@ extension UIImage {
             }  ?? []
     }
     
-    // Vision
-    var facesVision: [UIImage] {
+    // Face Detection with Vision Framework
+    var faces_Vision: [UIImage] {
         guard let ciImage = ciImage else { return [] }
 
         let faceDetectionRequest = VNDetectFaceRectanglesRequest()
@@ -46,9 +46,11 @@ let data = try! Data(contentsOf: url)
 if let image = UIImage(data: data) {
     // CIDetector
     let faces = image.faces
+    print(faces.count)
     
     // Vision
-    let faceVision = image.facesVision
+    let faces_v = image.faces_Vision
+    print(faces_v.count)
 
 }
 
