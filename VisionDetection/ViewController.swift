@@ -12,12 +12,17 @@ import Vision
 
 class ViewController: UIViewController {
     
+    // VNRequest: Either Retangles or Landmarks
+    var faceDetectionRequest: VNRequest!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Set up the video preview view.
         previewView.session = session
         
+        // Set up Vision Request
+        faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces) // Default
         setupVision()
         
         /*
@@ -128,6 +133,14 @@ class ViewController: UIViewController {
             
         }
     }
+    
+    @IBAction func UpdateDetectionType(_ sender: UISegmentedControl) {
+        // use segmentedControl to switch over VNRequest
+        faceDetectionRequest = sender.selectedSegmentIndex == 0 ? VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces) : VNDetectFaceLandmarksRequest(completionHandler: self.handleFaceLandmarks)
+        
+        setupVision()
+    }
+    
     
     @IBOutlet weak var previewView: PreviewView!
     
@@ -360,7 +373,9 @@ extension ViewController {
 
 extension ViewController {
     func setupVision() {
-        let faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces)
+//        let faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces)
+//        let faceDetectionRequest = VNDetectFaceLandmarksRequest(completionHandler: self.handleFaceLandmarks)
+
         self.requests = [faceDetectionRequest]
     }
     
@@ -369,6 +384,17 @@ extension ViewController {
             //perform all the UI updates on the main queue
             guard let results = request.results as? [VNFaceObservation] else { return }
             self.drawVisionRequestResults(results)
+        }
+    }
+    
+    func handleFaceLandmarks(request: VNRequest, error: Error?) {
+        DispatchQueue.main.async {
+            //perform all the UI updates on the main queue
+            guard let results = request.results as? [VNFaceObservation] else { return }
+            self.previewView.removeMask()
+            for face in results {
+                self.previewView.drawFaceWithLandmarks(face: face)
+            }
         }
     }
     
