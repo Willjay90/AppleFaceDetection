@@ -8,8 +8,9 @@ In iOS11, Apple introduces [CoreML](https://developer.apple.com/documentation/co
 
 Try the projects with real time face detection with your camera! 📷
 
-<img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Landmarks.png" width="270" height="480" />
-<img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Retangle.png" width="270" height="480" />
+<img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Landmarks.png" width="250" height="400"/> <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Retangle.png" width="250" height="400"/>
+
+
 #### TL;DR ####
 Check out the **Playground**, just a couple line of code!!
 
