@@ -14,7 +14,6 @@ class PreviewView: UIView {
     
     private var maskLayer = [CAShapeLayer]()
     
-    
     // MARK: AV capture properties
     var videoPreviewLayer: AVCaptureVideoPreviewLayer {
         return layer as! AVCaptureVideoPreviewLayer
@@ -34,49 +33,8 @@ class PreviewView: UIView {
         return AVCaptureVideoPreviewLayer.self
     }
     
-    func drawLayer(in rect: CGRect) {
-        
-        let mask = CAShapeLayer()
-        mask.frame = rect
-        
-        mask.backgroundColor = UIColor.yellow.cgColor
-        mask.cornerRadius = 10
-        mask.opacity = 0.3
-        mask.borderColor = UIColor.yellow.cgColor
-        mask.borderWidth = 2.0
-        
-        maskLayer.append(mask)
-        layer.insertSublayer(mask, at: 1)
-    }
-    
-    func drawFaceWithLandmarks(face: VNFaceObservation) {
-        
-        let transform = CGAffineTransform.identity.scaledBy(x: layer.frame.width, y: layer.frame.height)
-
-        let faceRect = face.boundingBox.applying(transform)
-        
-        // Draw the bounding rect
-        let faceLayer = self.createLayer(in: faceRect)
-        maskLayer.append(faceLayer)
-        layer.insertSublayer(faceLayer, at: 1)
-        
-        // Draw the landmarks
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.nose)!, isClosed:false)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.noseCrest)!, isClosed:false)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.medianLine)!, isClosed:false)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftEye)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftPupil)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftEyebrow)!, isClosed:false)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEye)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightPupil)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEye)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEyebrow)!, isClosed:false)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.innerLips)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.outerLips)!)
-        self.drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.faceContour)!, isClosed: false)
-    }
-    
-    func createLayer(in rect: CGRect) -> CAShapeLayer{
+    // Create a new layer drawing the bounding box
+    private func createLayer(in rect: CGRect) -> CAShapeLayer{
         
         let mask = CAShapeLayer()
         mask.frame = rect
@@ -85,41 +43,88 @@ class PreviewView: UIView {
         mask.borderColor = UIColor.yellow.cgColor
         mask.borderWidth = 2.0
         
+        maskLayer.append(mask)
+        layer.insertSublayer(mask, at: 1)
+        
         return mask
     }
     
-    func drawLandmarks(on targetLayer:CALayer, faceLandmarkRegion: VNFaceLandmarkRegion2D, isClosed: Bool = true) {
+    func drawFaceboundingBox(face : VNFaceObservation) {
+        
+        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -frame.height)
+        
+        let translate = CGAffineTransform.identity.scaledBy(x: frame.width, y: frame.height)
+        
+        // The coordinates are normalized to the dimensions of the processed image, with the origin at the image's lower-left corner.
+        let facebounds = face.boundingBox.applying(translate).applying(transform)
+        
+        _ = createLayer(in: facebounds)
+        
+    }
+    
+    func drawFaceWithLandmarks(face: VNFaceObservation) {
+        
+        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -frame.height)
+        
+        let translate = CGAffineTransform.identity.scaledBy(x: frame.width, y: frame.height)
+        
+        // The coordinates are normalized to the dimensions of the processed image, with the origin at the image's lower-left corner.
+        let facebounds = face.boundingBox.applying(translate).applying(transform)
+        
+        // Draw the bounding rect
+        let faceLayer = createLayer(in: facebounds)
+        
+        // Draw the landmarks
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.nose)!, isClosed:false)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.noseCrest)!, isClosed:false)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.medianLine)!, isClosed:false)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftEye)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftPupil)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.leftEyebrow)!, isClosed:false)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEye)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightPupil)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEye)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.rightEyebrow)!, isClosed:false)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.innerLips)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.outerLips)!)
+        drawLandmarks(on: faceLayer, faceLandmarkRegion: (face.landmarks?.faceContour)!, isClosed: false)
+    }
+    
+
+    
+    func drawLandmarks(on targetLayer: CALayer, faceLandmarkRegion: VNFaceLandmarkRegion2D, isClosed: Bool = true) {
         let rect: CGRect = targetLayer.frame
         var points: [CGPoint] = []
+        
         for i in 0..<faceLandmarkRegion.pointCount {
             let point = faceLandmarkRegion.normalizedPoints[i]
-            let p = CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
-            points.append(p)
+            points.append(point)
         }
         
-        let landmarkLayer = self.drawPointsOnLayer(rect: rect, landmarkPoints: points, isClosed: isClosed)
+        let landmarkLayer = drawPointsOnLayer(rect: rect, landmarkPoints: points, isClosed: isClosed)
         
         // Change scale, coordinate systems, and mirroring
         landmarkLayer.transform = CATransform3DMakeAffineTransform(
             CGAffineTransform.identity
-                .translatedBy(x: rect.width, y: 0)
-                .scaledBy(x: -1, y: 1)
-                .scaledBy(x: rect.width, y:rect.height)
-                .scaledBy(x: 1, y: -1)
+                .scaledBy(x: rect.width, y: -rect.height)
                 .translatedBy(x: 0, y: -1)
         )
+
         targetLayer.insertSublayer(landmarkLayer, at: 1)
     }
     
     func drawPointsOnLayer(rect:CGRect, landmarkPoints: [CGPoint], isClosed: Bool = true) -> CALayer {
         let linePath = UIBezierPath()
         linePath.move(to: landmarkPoints.first!)
+        
         for point in landmarkPoints.dropFirst() {
             linePath.addLine(to: point)
         }
+        
         if isClosed {
             linePath.addLine(to: landmarkPoints.first!)
         }
+        
         let lineLayer = CAShapeLayer()
         lineLayer.path = linePath.cgPath
         lineLayer.fillColor = nil

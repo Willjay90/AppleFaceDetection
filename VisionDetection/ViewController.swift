@@ -373,9 +373,6 @@ extension ViewController {
 
 extension ViewController {
     func setupVision() {
-//        let faceDetectionRequest = VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces)
-//        let faceDetectionRequest = VNDetectFaceLandmarksRequest(completionHandler: self.handleFaceLandmarks)
-
         self.requests = [faceDetectionRequest]
     }
     
@@ -383,7 +380,12 @@ extension ViewController {
         DispatchQueue.main.async {
             //perform all the UI updates on the main queue
             guard let results = request.results as? [VNFaceObservation] else { return }
-            self.drawVisionRequestResults(results)
+            print("face count = \(results.count) ")
+            self.previewView.removeMask()
+            
+            for face in results {
+                self.previewView.drawFaceboundingBox(face: face)
+            }
         }
     }
     
@@ -398,20 +400,7 @@ extension ViewController {
         }
     }
     
-    func drawVisionRequestResults(_ results: [VNFaceObservation]) {
-        print("face count = \(results.count) ")
-        previewView.removeMask()
-        
-        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -self.view.frame.height)
-        
-        let translate = CGAffineTransform.identity.scaledBy(x: self.view.frame.width, y: self.view.frame.height)
-        
-        for face in results {
-            // The coordinates are normalized to the dimensions of the processed image, with the origin at the image's lower-left corner.
-            let facebounds = face.boundingBox.applying(translate).applying(transform)
-            previewView.drawLayer(in: facebounds)
-        }
-    }
+
 }
 
 extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
