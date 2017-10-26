@@ -10,7 +10,7 @@ In iOS11, Apple introduces [CoreML](https://developer.apple.com/documentation/co
 
 Try it out with real time face detection on your iPhone! 📱
 
-<img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Landmarks.png" width="250" height="400"/> <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Retangle.png" width="250" height="400"/>
+<img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/VNDetectFaceRectanglesRequest.png" width="250" height="400"/> <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/VNDetectFaceLandmarksRequest.png" width="250" height="400"/>  <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/faceRecognition.gif" />
 
 Also check out the **Playground** with **CIDetector v.s. Vison**, just a couple lines of code!! 
 

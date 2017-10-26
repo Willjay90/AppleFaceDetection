@@ -136,7 +136,7 @@ class ViewController: UIViewController {
     
     @IBAction func UpdateDetectionType(_ sender: UISegmentedControl) {
         // use segmentedControl to switch over VNRequest
-        faceDetectionRequest = sender.selectedSegmentIndex == 0 ? VNDetectFaceRectanglesRequest(completionHandler: self.handleFaces) : VNDetectFaceLandmarksRequest(completionHandler: self.handleFaceLandmarks)
+        faceDetectionRequest = sender.selectedSegmentIndex == 0 ? VNDetectFaceRectanglesRequest(completionHandler: handleFaces) : VNDetectFaceLandmarksRequest(completionHandler: handleFaceLandmarks)
         
         setupVision()
     }
@@ -380,9 +380,7 @@ extension ViewController {
         DispatchQueue.main.async {
             //perform all the UI updates on the main queue
             guard let results = request.results as? [VNFaceObservation] else { return }
-            print("face count = \(results.count) ")
             self.previewView.removeMask()
-            
             for face in results {
                 self.previewView.drawFaceboundingBox(face: face)
             }
@@ -417,7 +415,7 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
         let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: exifOrientation, options: requestOptions)
         
         do {
-            try imageRequestHandler.perform(self.requests)
+            try imageRequestHandler.perform(requests)
         }
             
         catch {
