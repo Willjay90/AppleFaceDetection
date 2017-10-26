@@ -51,9 +51,9 @@ class PreviewView: UIView {
     
     func drawFaceWithLandmarks(face: VNFaceObservation) {
         
-        let translate = CGAffineTransform.identity.scaledBy(x: layer.frame.width, y: layer.frame.height)
-        let transform = CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -layer.frame.width, y: -layer.frame.height)
-        let faceRect = face.boundingBox.applying(translate).applying(transform)
+        let transform = CGAffineTransform.identity.scaledBy(x: layer.frame.width, y: layer.frame.height)
+
+        let faceRect = face.boundingBox.applying(transform)
         
         // Draw the bounding rect
         let faceLayer = self.createLayer(in: faceRect)
