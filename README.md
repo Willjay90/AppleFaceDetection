@@ -1,5 +1,7 @@
 # Face Detection with Vision Framework
-#### This project build on iOS 11 in Swift 4.
+![ios11+](https://img.shields.io/badge/ios-11%2B-blue.svg)
+![swift4+](https://img.shields.io/badge/swift-4%2B-orange.svg)
+
 
 Previously, in iOS 10, to detect faces in a picture, you can use [CIDetector](https://developer.apple.com/reference/coreimage/cidetector) (Apple)
 or [Mobile Vision](https://developers.google.com/vision/face-detection-concepts) (Google)
@@ -32,7 +34,7 @@ var faceDetectionRequest: VNRequest!
 
 ```
 
-Do your requests every single frame. The image from camera via `captureOutput(_:didOutput:from:)`, see [AVCaptureVideoDataOutputSampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) 
+Perform the requests every single frame. The image comes from camera via `captureOutput(_:didOutput:from:)`, see [AVCaptureVideoDataOutputSampleBufferDelegate](https://developer.apple.com/documentation/avfoundation/avcapturevideodataoutputsamplebufferdelegate/1385775-captureoutput) 
 
 ```swift
 func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -58,11 +60,11 @@ func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBu
 }
 ```
 
-You should handle with the return of your request, `VNRequestCompletionHandler`. Just two functions, 
+Handle the return of your request, `VNRequestCompletionHandler`.  
 - `handleFaces` for `VNDetectFaceRectanglesRequest`
 - `handleFaceLandmarks` for `VNDetectFaceLandmarksRequest`
 
-then you will get the result from the request, which are `VNFaceObservations`. That's all you got from the **Vision API**
+then you will get the result from the request, which are `VNFaceObservation`s. That's all you got from the **Vision API**
 
 ```swift
 func handleFaces(request: VNRequest, error: Error?) {
