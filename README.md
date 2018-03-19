@@ -12,10 +12,10 @@ Try it out with real time face detection on your iPhone! 📱
 
 <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/VNDetectFaceRectanglesRequest.png" width="250" height="400"/> <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/VNDetectFaceLandmarksRequest.png" width="250" height="400"/>  <img src="https://github.com/Weijay/AppleFaceDetection/blob/master/resources/faceRecognition.gif" />
 
-Also check out the **Playground** with **CIDetector v.s. Vison**, just a couple lines of code!! 
+You can find out the differences between `CIDetector` and `Vison Framework` down below.
 
+[Moving From Voila-Jones to Deep Learning](https://machinelearning.apple.com/2017/11/16/face-detection.html)
 
-![playground_image](https://github.com/Weijay/AppleFaceDetection/blob/master/resources/Vision.png)
 
 ---
 
