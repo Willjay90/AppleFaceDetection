@@ -12,8 +12,36 @@ import Vision
 
 class ViewController: UIViewController {
     
+    
+    @IBOutlet weak var previewView: PreviewView!
+    
     // VNRequest: Either Retangles or Landmarks
-    var faceDetectionRequest: VNRequest!
+    private var faceDetectionRequest: VNRequest!
+    
+    // TODO: Decide camera position --- front or back
+    private var devicePosition: AVCaptureDevice.Position = .front
+    
+    // Session Management
+    private enum SessionSetupResult {
+        case success
+        case notAuthorized
+        case configurationFailed
+    }
+    
+    private let session = AVCaptureSession()
+    private var isSessionRunning = false
+    
+    // Communicate with the session and other session objects on this queue.
+    private let sessionQueue = DispatchQueue(label: "session queue", attributes: [], target: nil)
+    
+    private var setupResult: SessionSetupResult = .success
+    
+    private var videoDeviceInput:   AVCaptureDeviceInput!
+
+    private var videoDataOutput:    AVCaptureVideoDataOutput!
+    private var videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue")
+    
+    private var requests = [VNRequest]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -134,64 +162,54 @@ class ViewController: UIViewController {
         }
     }
     
+    // Segmente Control to switch over FaceOnly or FaceLandmark
     @IBAction func UpdateDetectionType(_ sender: UISegmentedControl) {
-        // use segmentedControl to switch over VNRequest
         faceDetectionRequest = sender.selectedSegmentIndex == 0 ? VNDetectFaceRectanglesRequest(completionHandler: handleFaces) : VNDetectFaceLandmarksRequest(completionHandler: handleFaceLandmarks)
         
         setupVision()
     }
+
     
-    
-    @IBOutlet weak var previewView: PreviewView!
-    
-    // MARK: Session Management
-    
-    private enum SessionSetupResult {
-        case success
-        case notAuthorized
-        case configurationFailed
-    }
-    
-    private var devicePosition: AVCaptureDevice.Position = .back
-    
-    private let session = AVCaptureSession()
-    private var isSessionRunning = false
-    
-    private let sessionQueue = DispatchQueue(label: "session queue", attributes: [], target: nil) // Communicate with the session and other session objects on this queue.
-    
-    private var setupResult: SessionSetupResult = .success
-    
-    private var videoDeviceInput:   AVCaptureDeviceInput!
-    
-    private var videoDataOutput:    AVCaptureVideoDataOutput!
-    private var videoDataOutputQueue = DispatchQueue(label: "VideoDataOutputQueue")
-    
-    private var requests = [VNRequest]()
-    
+}
+
+// Video Sessions
+extension ViewController {
     private func configureSession() {
-        if self.setupResult != .success {
-            return
-        }
+        if setupResult != .success { return }
         
         session.beginConfiguration()
         session.sessionPreset = .high
         
         // Add video input.
+        addVideoDataInput()
+        
+        // Add video output.
+        addVideoDataOutput()
+        
+        session.commitConfiguration()
+        
+    }
+    
+    private func addVideoDataInput() {
         do {
-            var defaultVideoDevice: AVCaptureDevice?
+            var defaultVideoDevice: AVCaptureDevice!
             
-            // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: AVMediaType.video, position: .back) {
-                defaultVideoDevice = dualCameraDevice
+            if devicePosition == .front {
+                if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .front) {
+                    defaultVideoDevice = frontCameraDevice
+                }
             }
-                
-            else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
-                defaultVideoDevice = backCameraDevice
+            else {
+                // Choose the back dual camera if available, otherwise default to a wide angle camera.
+                if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: AVMediaType.video, position: .back) {
+                    defaultVideoDevice = dualCameraDevice
+                }
+                    
+                else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .back) {
+                    defaultVideoDevice = backCameraDevice
+                }
             }
-                
-            else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .front) {
-                defaultVideoDevice = frontCameraDevice
-            }
+            
             
             let videoDeviceInput = try AVCaptureDeviceInput(device: defaultVideoDevice!)
             
@@ -219,23 +237,17 @@ class ViewController: UIViewController {
                     self.previewView.videoPreviewLayer.connection!.videoOrientation = initialVideoOrientation
                 }
             }
-                
-            else {
-                print("Could not add video device input to the session")
-                setupResult = .configurationFailed
-                session.commitConfiguration()
-                return
-            }
             
         }
         catch {
-            print("Could not create video device input: \(error)")
+            print("Could not add video device input to the session")
             setupResult = .configurationFailed
             session.commitConfiguration()
             return
         }
-        
-        // add output
+    }
+    
+    private func addVideoDataOutput() {
         videoDataOutput = AVCaptureVideoDataOutput()
         videoDataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_32BGRA)]
         
@@ -251,63 +263,10 @@ class ViewController: UIViewController {
             session.commitConfiguration()
             return
         }
-        
-        session.commitConfiguration()
-        
     }
-    
-    private func availableSessionPresets() -> [String] {
-        let allSessionPresets = [AVCaptureSession.Preset.photo,
-                                 AVCaptureSession.Preset.low,
-                                 AVCaptureSession.Preset.medium,
-                                 AVCaptureSession.Preset.high,
-                                 AVCaptureSession.Preset.cif352x288,
-                                 AVCaptureSession.Preset.vga640x480,
-                                 AVCaptureSession.Preset.hd1280x720,
-                                 AVCaptureSession.Preset.iFrame960x540,
-                                 AVCaptureSession.Preset.iFrame1280x720,
-                                 AVCaptureSession.Preset.hd1920x1080,
-                                 AVCaptureSession.Preset.hd4K3840x2160]
-        
-        var availableSessionPresets = [String]()
-        for sessionPreset in allSessionPresets {
-            if session.canSetSessionPreset(sessionPreset) {
-                availableSessionPresets.append(sessionPreset.rawValue)
-            }
-        }
-        
-        return availableSessionPresets
-    }
-    
-    func exifOrientationFromDeviceOrientation() -> UInt32 {
-        enum DeviceOrientation: UInt32 {
-            case top0ColLeft = 1
-            case top0ColRight = 2
-            case bottom0ColRight = 3
-            case bottom0ColLeft = 4
-            case left0ColTop = 5
-            case right0ColTop = 6
-            case right0ColBottom = 7
-            case left0ColBottom = 8
-        }
-        var exifOrientation: DeviceOrientation
-        
-        switch UIDevice.current.orientation {
-        case .portraitUpsideDown:
-            exifOrientation = .left0ColBottom
-        case .landscapeLeft:
-            exifOrientation = devicePosition == .front ? .bottom0ColRight : .top0ColLeft
-        case .landscapeRight:
-            exifOrientation = devicePosition == .front ? .top0ColLeft : .bottom0ColRight
-        default:
-            exifOrientation = .right0ColTop
-        }
-        return exifOrientation.rawValue
-    }
-    
-    
 }
 
+// MARK: -- Observers and Event Handlers
 extension ViewController {
     private func addObservers() {
         /*
@@ -371,6 +330,7 @@ extension ViewController {
     }
 }
 
+// MARK: -- Helpers
 extension ViewController {
     func setupVision() {
         self.requests = [faceDetectionRequest]
@@ -397,12 +357,65 @@ extension ViewController {
             }
         }
     }
-    
 
 }
 
-extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
-    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+// Camera Settings & Orientation
+extension ViewController {
+    func availableSessionPresets() -> [String] {
+        let allSessionPresets = [AVCaptureSession.Preset.photo,
+                                 AVCaptureSession.Preset.low,
+                                 AVCaptureSession.Preset.medium,
+                                 AVCaptureSession.Preset.high,
+                                 AVCaptureSession.Preset.cif352x288,
+                                 AVCaptureSession.Preset.vga640x480,
+                                 AVCaptureSession.Preset.hd1280x720,
+                                 AVCaptureSession.Preset.iFrame960x540,
+                                 AVCaptureSession.Preset.iFrame1280x720,
+                                 AVCaptureSession.Preset.hd1920x1080,
+                                 AVCaptureSession.Preset.hd4K3840x2160]
+        
+        var availableSessionPresets = [String]()
+        for sessionPreset in allSessionPresets {
+            if session.canSetSessionPreset(sessionPreset) {
+                availableSessionPresets.append(sessionPreset.rawValue)
+            }
+        }
+        
+        return availableSessionPresets
+    }
+    
+    func exifOrientationFromDeviceOrientation() -> UInt32 {
+        enum DeviceOrientation: UInt32 {
+            case top0ColLeft = 1
+            case top0ColRight = 2
+            case bottom0ColRight = 3
+            case bottom0ColLeft = 4
+            case left0ColTop = 5
+            case right0ColTop = 6
+            case right0ColBottom = 7
+            case left0ColBottom = 8
+        }
+        var exifOrientation: DeviceOrientation
+        
+        switch UIDevice.current.orientation {
+        case .portraitUpsideDown:
+            exifOrientation = .left0ColBottom
+        case .landscapeLeft:
+            exifOrientation = devicePosition == .front ? .bottom0ColRight : .top0ColLeft
+        case .landscapeRight:
+            exifOrientation = devicePosition == .front ? .top0ColLeft : .bottom0ColRight
+        default:
+            exifOrientation = devicePosition == .front ? .left0ColTop : .right0ColTop
+        }
+        return exifOrientation.rawValue
+    }
+    
+    
+}
+
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
         let exifOrientation = CGImagePropertyOrientation(rawValue: exifOrientationFromDeviceOrientation()) else { return }
@@ -426,28 +439,4 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate{
     
 }
 
-
-extension UIDeviceOrientation {
-    var videoOrientation: AVCaptureVideoOrientation? {
-        switch self {
-        case .portrait: return .portrait
-        case .portraitUpsideDown: return .portraitUpsideDown
-        case .landscapeLeft: return .landscapeRight
-        case .landscapeRight: return .landscapeLeft
-        default: return nil
-        }
-    }
-}
-
-extension UIInterfaceOrientation {
-    var videoOrientation: AVCaptureVideoOrientation? {
-        switch self {
-        case .portrait: return .portrait
-        case .portraitUpsideDown: return .portraitUpsideDown
-        case .landscapeLeft: return .landscapeLeft
-        case .landscapeRight: return .landscapeRight
-        default: return nil
-        }
-    }
-}
 

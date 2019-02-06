@@ -13,6 +13,7 @@
 		02611D9B1EEA5317009714B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02611D9A1EEA5317009714B8 /* Assets.xcassets */; };
 		02611D9E1EEA5317009714B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02611D9C1EEA5317009714B8 /* LaunchScreen.storyboard */; };
 		02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02611DA51EEA5683009714B8 /* PreviewView.swift */; };
+		2849C929220ABCBE000977F1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849C928220ABCBE000977F1 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		02611D9D1EEA5317009714B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		02611D9F1EEA5317009714B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02611DA51EEA5683009714B8 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		2849C928220ABCBE000977F1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				02611D931EEA5317009714B8 /* AppDelegate.swift */,
 				02611D951EEA5317009714B8 /* ViewController.swift */,
+				2849C928220ABCBE000977F1 /* Extensions.swift */,
 				02611DA51EEA5683009714B8 /* PreviewView.swift */,
 				02611D971EEA5317009714B8 /* Main.storyboard */,
 				02611D9A1EEA5317009714B8 /* Assets.xcassets */,
@@ -141,6 +144,7 @@
 				02611D961EEA5317009714B8 /* ViewController.swift in Sources */,
 				02611D941EEA5317009714B8 /* AppDelegate.swift in Sources */,
 				02611DA61EEA5683009714B8 /* PreviewView.swift in Sources */,
+				2849C929220ABCBE000977F1 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
